@@ -36,7 +36,7 @@ $peminjaman = mysqli_query($koneksi, "SELECT anggota.nama_anggota, peminjaman.* 
                                         <td><?php echo $rowQuery['tgl_pinjam'] ?></td>
                                         <td><?php echo $rowQuery['tgl_kembali'] ?></td>
                                         <td><?php echo $rowQuery['status'] ?></td>
-                                        <td>| <a href="?pg=tambah_pinjam&edit=<?php echo $rowQuery['id'] ?>"><span class="fa-solid fa-pencil"></span></a> | | <a href="?pg=tambah_pinjam&delete=<?php echo $rowQuery['id'] ?>" onclick="return confirm('Apakah anda yakin akan menghapus data ini??')"><span class="fa-regular fa-trash-can"></span> |</a></td>
+                                        <td><button type="submit" name="simpan" class="btn btn-primary"><a href="?pg=tambah_pinjam&detail=<?php echo $rowQuery['id'] ?>">Simpan</a></button><button><a href="?pg=tambah_pinjam&delete=<?php echo $rowQuery['id'] ?>" onclick="return confirm('Apakah anda yakin akan menghapus data ini??')">Delete</a></button></td>
                                     </tr>
                                 <?php endwhile ?>
                             </tbody>
