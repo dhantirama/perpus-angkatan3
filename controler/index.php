@@ -15,7 +15,7 @@ include '../koneksi.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../assets/fontawesome/css/all.min.css" rel="stylesheet">
     <title>Document</title>
 </head>
 
@@ -49,7 +49,25 @@ include '../koneksi.php';
     ?>
     <!-- End Footer -->
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/jquery-3.7.1.min.js"></script>
     <script src="../lib/app.js"></script>
+
+    <script>
+        $("#id_peminjaman").change(function() {
+            let kode_buku = $(this).find('option:selected').text(); //this bisa diganti menggunakan selector atau id_peminjaman
+            $.ajax({
+                url: "../ajax/getPeminjam.php?kode_buku=" + kode_buku,
+                type: "GET",
+                dataType: "json",
+                success: function(res) {
+                    $('#no_pinjam').val(res.data.kode_buku);
+                    $('#tgl_pinjam').val(res.data.tgl_pinjam);
+                    $('#nama_anggota').val(res.data.nama_anggota);
+                    $('#tgl_kembali').val(res.data.tgl_kembali);
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

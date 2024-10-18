@@ -5,11 +5,12 @@ if (isset($_POST['simpan'])) {
     $tgl_pinjam = $_POST['tgl_pinjam'];
     $tgl_kembali = $_POST['tgl_kembali'];
     $id_buku = $_POST['id_buku'];
+    $status = "Di Pinjam";
 
 
     // sql = structur query languages / DML = data manipulation language
     // select, insert. update, dan delete
-    $insert = mysqli_query($koneksi, "INSERT INTO peminjaman (kode_buku, id_anggota, tgl_pinjam, tgl_kembali) VALUES ('$kode_buku', '$id_anggota', '$tgl_pinjam', '$tgl_kembali')");
+    $insert = mysqli_query($koneksi, "INSERT INTO peminjaman (kode_buku, id_anggota, tgl_pinjam, tgl_kembali, status) VALUES ('$kode_buku', '$id_anggota', '$tgl_pinjam', '$tgl_kembali', '$status')");
     $id_peminjaman = mysqli_insert_id($koneksi);
 
     foreach ($id_buku as $key => $buku) {
@@ -28,8 +29,8 @@ $queryDetailPinjam = mysqli_query($koneksi, "SELECT books.nama_buku, detail_pemi
 
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
-    $delete = mysqli_query($koneksi, "DELETE FROM peminjaman WHERE id='$id'");
-    header("location: ?pg=pinjamk&hapus=berhasil");
+    $delete = mysqli_query($koneksi, "UPDATE peminjaman SET deleted_at = 1  WHERE id='$id'");
+    header("location: ?pg=pinjam&hapus=berhasil");
 }
 
 $queryBook = mysqli_query($koneksi, "SELECT * FROM books");
@@ -60,7 +61,7 @@ $kode_pinjam = "PJM/" . date('dmy') . "/" . sprintf("%03s", $id_pinjam);   // %0
                     </div>
                     <div class="mb-3">
                         <label for="">Tanggal Peminjaman</label>
-                        <input required type="date" class="form-control" name="tgl_pinjam" value="<?php echo isset($_GET['detail']) ? $rowDetail['tgl_pinjam'] : '' ?>" readonly>
+                        <input required type="date" class="form-control" name="tgl_pinjam" value="<?php echo isset($_GET['detail']) ? $rowDetail['tgl_pinjam'] : '' ?>" <?php echo isset($_GET['detail']) ? 'readonly' : '' ?>>
                     </div>
                     <div class="mb-3">
                         <?php if (!isset($_GET['detail'])): ?>
@@ -93,7 +94,7 @@ $kode_pinjam = "PJM/" . date('dmy') . "/" . sprintf("%03s", $id_pinjam);   // %0
                     </div>
                     <div class="mb-3">
                         <label for="">Tanggal Kembali</label>
-                        <input required type="date" class="form-control" name="tgl_kembali" value="<?php echo isset($_GET['detail']) ? $rowDetail['tgl_kembali'] : '' ?>" readonly>
+                        <input required type="date" class="form-control" name="tgl_kembali" value="<?php echo isset($_GET['detail']) ? $rowDetail['tgl_kembali'] : '' ?>" <?php echo isset($_GET['detail']) ? 'readonly' : '' ?>>
                     </div>
                 </div>
             </div>

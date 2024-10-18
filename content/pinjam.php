@@ -1,5 +1,5 @@
 <?php
-$peminjaman = mysqli_query($koneksi, "SELECT anggota.nama_anggota, peminjaman.* FROM peminjaman LEFT JOIN anggota ON anggota.id = peminjaman.id_anggota ORDER BY id DESC");
+$peminjaman = mysqli_query($koneksi, "SELECT anggota.nama_anggota, peminjaman.* FROM peminjaman LEFT JOIN anggota ON anggota.id = peminjaman.id_anggota WHERE deleted_at = 0 ORDER BY id DESC");
 
 ?>
 <div class="wrapper">
@@ -33,10 +33,12 @@ $peminjaman = mysqli_query($koneksi, "SELECT anggota.nama_anggota, peminjaman.* 
                                         <td><?php echo $no++ ?></td>
                                         <td><?php echo $rowQuery['nama_anggota'] ?></td>
                                         <td><?php echo $rowQuery['kode_buku'] ?></td>
-                                        <td><?php echo $rowQuery['tgl_pinjam'] ?></td>
-                                        <td><?php echo $rowQuery['tgl_kembali'] ?></td>
+                                        <td><?php echo date('D, d-m-Y', strtotime($rowQuery['tgl_pinjam']))  ?></td>
+                                        <td><?php echo date('D, d-m-Y', strtotime($rowQuery['tgl_kembali'])) ?></td>
                                         <td><?php echo $rowQuery['status'] ?></td>
-                                        <td><button type="submit" name="simpan" class="btn btn-primary"><a href="?pg=tambah_pinjam&detail=<?php echo $rowQuery['id'] ?>">Simpan</a></button><button><a href="?pg=tambah_pinjam&delete=<?php echo $rowQuery['id'] ?>" onclick="return confirm('Apakah anda yakin akan menghapus data ini??')">Delete</a></button></td>
+                                        <td>| <a href="?pg=tambah_pinjam&detail=<?php echo $rowQuery['id'] ?>"><span class="fa-solid fa-pencil"></span></a> | |
+                                            <a href="?pg=tambah_pinjam&delete=<?php echo $rowQuery['id'] ?>" onclick="return confirm('Apakah anda yakin akan menghapus data ini??')"><span class="fa-regular fa-trash-can"></span> |</a></button>
+                                        </td>
                                     </tr>
                                 <?php endwhile ?>
                             </tbody>
