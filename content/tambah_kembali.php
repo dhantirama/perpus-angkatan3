@@ -1,24 +1,24 @@
 <?php
 if (isset($_POST['simpan'])) {
-    $kode_buku = $_POST['kode_buku'];
-    $id_anggota = $_POST['id_anggota'];
-    $tgl_pinjam = $_POST['tgl_pinjam'];
-    $tgl_kembali = $_POST['tgl_kembali'];
-    $id_buku = $_POST['id_buku'];
-    $status = "Di Pinjam";
+    $id_peminjaman = $_POST['id_peminjaman'];
+    $queryPeminjam = mysqli_query($koneksi, "SELECT id, kode_buku FROM peminjaman WHERE kode_buku='$id_peminjaman'");
+    $rowPeminjam = mysqli_fetch_assoc($queryPeminjam);
+    $id_peminjaman = $rowPeminjam['id'];
+    $denda = $_POST['denda'];
+    if ($denda == 0) {
+        $status = 0;
+    } else {
+        $status = 1;
+    }
 
 
     // sql = structur query languages / DML = data manipulation language
     // select, insert. update, dan delete
-    $insert = mysqli_query($koneksi, "INSERT INTO peminjaman (kode_buku, id_anggota, tgl_pinjam, tgl_kembali, status) VALUES ('$kode_buku', '$id_anggota', '$tgl_pinjam', '$tgl_kembali', '$status')");
-    $id_peminjaman = mysqli_insert_id($koneksi);
+    $insert = mysqli_query($koneksi, "INSERT INTO pengembalian (id_peminjaman, status, denda) VALUES ('$id_peminjaman', '$status', '$denda')");
 
-    foreach ($id_buku as $key => $buku) {
-        $buku = $_POST['id_buku'][$key];
+    $updatePeminjam = mysqli_query($koneksi, "UPDATE peminjaman SET status = 'Di Kembalikan' WHERE id='$id_peminjaman'");
 
-        $insertDetail = mysqli_query($koneksi, "INSERT INTO detail_peminjaman (id_peminjaman, id_buku) VALUES ('$id_peminjaman','$buku')");
-    }
-    header("location:?pg=pinjam&tambah=berhasil");
+    header("location:?pg=kembali&tambah=berhasil");
 }
 
 $id = isset($_GET['detail']) ? $_GET['detail'] : '';
@@ -30,7 +30,7 @@ $queryDetailPinjam = mysqli_query($koneksi, "SELECT books.nama_buku, detail_pemi
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     $delete = mysqli_query($koneksi, "UPDATE peminjaman SET deleted_at = 1  WHERE id='$id'");
-    header("location: ?pg=pinjam&hapus=berhasil");
+    header("location: ?pg=kembali&hapus=berhasil");
 }
 
 $queryBook = mysqli_query($koneksi, "SELECT * FROM books");
@@ -79,6 +79,10 @@ $queryKodePm =  mysqli_query($koneksi, "SELECT * FROM peminjaman WHERE status = 
                                         <label for="" class="form-label">Tanggal Peminjaman</label>
                                         <input type="text" readonly id="tgl_pinjam" class="form-control">
                                     </div>
+                                    <div class="mb-3">
+                                        <label for="" class="form-label">Denda</label>
+                                        <input type="text" readonly id="denda" name="denda" class="form-control">
+                                    </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="mb-3">
@@ -97,40 +101,19 @@ $queryKodePm =  mysqli_query($koneksi, "SELECT * FROM peminjaman WHERE status = 
             </div>
             <!-- tabel data dari php -->
 
-            <?php if (isset($_GET['detail'])): ?>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama Buku</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $no = 1; ?>
-                        <?php while ($rowDetailPeminjaman = mysqli_fetch_assoc($queryDetailPinjam)): ?>
-                            <tr>
-                                <td><?php echo $no++; ?></td>
-                                <td><?php echo $rowDetailPeminjaman['nama_buku'] ?></td>
-                            </tr>
-                        <?php endwhile ?>
-                    </tbody>
-                </table>
-            <?php else: ?>
-                <table class="table table-bordered" id="table">
-                    <thead>
-                        <tr>
-                            <th>Nama Buku</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-row">
-                    </tbody>
-                </table>
-                <div class="mt-3">
-                    <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
-                </div>
-            <?php endif ?>
             <!-- ini tabel dari js -->
+            <table class="table table-bordered" id="table-pengembalian">
+                <thead>
+                    <tr>
+                        <th>Nama Buku</th>
+                    </tr>
+                </thead>
+                <tbody class="table-row">
+                </tbody>
+            </table>
+            <div class="mt-3">
+                <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
+            </div>
         </form>
     </fieldset>
 </div>

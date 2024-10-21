@@ -30,8 +30,8 @@ $peminjaman = mysqli_query($koneksi, "SELECT peminjaman.kode_buku, pengembalian.
                                     <tr>
                                         <td><?php echo $no++ ?></td>
                                         <td><?php echo $rowQuery['kode_buku'] ?></td>
-                                        <td><?php echo $rowQuery['denda'] ?></td>
                                         <td><?php echo $rowQuery['status'] ?></td>
+                                        <td><?php echo $rowQuery['denda'] ?></td>
                                         <td>| <a href="?pg=tambah_kembali&detail=<?php echo $rowQuery['id'] ?>"><span class="fa-solid fa-pencil"></span></a> | |
                                             <a href="?pg=tambah_kembali&delete=<?php echo $rowQuery['id'] ?>" onclick="return confirm('Apakah anda yakin akan menghapus data ini??')"><span class="fa-regular fa-trash-can"></span> |</a></button>
                                         </td>
